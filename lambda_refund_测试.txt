@@ -1,0 +1,20 @@
+import json
+
+def lambda_handler(event, context):
+    body = event
+    if(event['httpMethod']=='GET'):
+        return {
+            'statusCode': 200,
+            'body': json.dumps('Hello GET!')
+        }
+    if(event['httpMethod']=='POST'):
+        body = json.loads(event['body'])
+        print(body)
+        user_id = body['user_id']
+        game_id = body['game_id']
+        refund_id = body['refund_id']
+        
+        return {
+            'statusCode': 200,
+            'body':json.dumps('post success' + user_id + " " + game_id +" "+refund_id)
+        }

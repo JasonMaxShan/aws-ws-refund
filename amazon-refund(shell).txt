@@ -1,0 +1,14 @@
+GAME_ID=554a3e8ebb274461b5808ab33ffcaa20
+TEAM_ID=eed10697f456405cb270064a03b6990b
+while :
+do
+	cat app_logs | grep -i refund | while read line
+	do
+		UUID=` echo $line | awk '{ print $7}' `
+		echo "Sent Refund request for ID: $UUID"
+		REQ_RESP=`curl -i -H "Accept: application/json" -X POST -d '{"game":"'"$GAME_ID"'", "team":"'"$TEAM_ID"'", "order":"'"$UUID"'"}' https://stats.aws.dev-null.link/proc/refund`
+		echo "Request response: "
+		echo $REQ_RESP
+	done
+	sleep 30
+done

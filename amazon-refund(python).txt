@@ -1,0 +1,36 @@
+#Use lambda and awslogs
+import json
+import base64
+import gzip
+from botocore.vendored import requests
+
+def post_refund(refund_code):
+    aheaders = {'Content-Type': 'application/json'}
+    aurl = "https://stats.aws.dev-null.link/proc/refund"
+    GAME_ID = "956c82e9f08a4cf69bb02ad374f87840"
+    TEAM_ID = "28103994e2b24b588ef96ce4bf46aa2e"
+    adata = {'game':GAME_ID, 'team':TEAM_ID, 'order':refund_code}
+    response = requests.post(url=aurl, headers=aheaders, data=json.dumps(adata))
+
+    print(response.text)
+    
+def lambda_handler(event, context):
+    
+    imgdata=base64.b64decode(event['awslogs']['data'])
+    #save 1.gzip
+    file=open('/tmp/1.gzip','wb') 
+    file.write(imgdata)
+    file.close()
+    #open and read 1.gzip
+    f = gzip.open("/tmp/1.gzip", 'rb')
+    file_content = f.read()
+    result=file_content.decode("utf-8")
+    result_dit=json.loads(result)
+    tmp=result_dit['logEvents'][0]['message'].split()
+    refund_code=tmp[6]
+    post_refund(refund_code)
+    return {
+        
+        'statusCode': 200,
+        'body': json.dumps('Hello from Lambda!')
+    }

@@ -1,5 +1,5 @@
-GAME_ID=554a3e8ebb274461b5808ab33ffcaa20
-TEAM_ID=eed10697f456405cb270064a03b6990b
+GAME_ID=c9841b4123074cbfb0eff41b04249f52
+TEAM_ID=db4d4c7f80ea4f099d175c47c89f6ee5
 while :
 do
 	cat app_logs | grep -i refund | while read line

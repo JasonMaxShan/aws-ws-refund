@@ -1,0 +1,35 @@
+dockerfile
+
+
+FROM    amazonlinux
+ENV     AWS_DEFAULT_REGION=cn-northwest-1
+COPY    conf.toml server_music server_log refund.sh start.sh /
+CMD    /bin/bash start.sh
+
+
+-----------------------------------------
+refund.sh
+
+#!/bin/bash
+user_id=923
+game_id=206
+
+url="http://onlyellow.cstor.cn:18888/launch_refund"
+
+while :
+do
+        cat server.log | grep Refund | while read line
+        do
+                refund_id=`echo $line | cut -d " " -f 6`
+                echo $refund_id
+                echo "{\"user_id\":$user_id,\"game_id\":$game_id,\"refund_id\":\"$refund_id\"}"
+                curl -i -H "Accept:application/json" -X POST -d "{\"user_id\":$user_id,\"game_id\":$game_id,\"refund_id\":\"$refund_id\"}"  $url
+        done
+                 sleep 5
+done
+
+-----------------------------------------
+start.sh
+
+.refund.sh &
+./sever_binary
